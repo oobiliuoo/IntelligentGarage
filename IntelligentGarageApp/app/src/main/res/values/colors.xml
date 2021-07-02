@@ -12,4 +12,23 @@
     <color name="gray">#FFF4F4F4</color>
 
 
+    <color name="flesh">#F1E8D9</color>
+    <color name="flesh_black">#F8E4C2</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="tea_green">#7CB342</color>
+    <color name="tea_green_black">#43A047</color>
+
+    <color name="app_bg_color">@color/flesh</color>
+    <color name="app_text_color">@color/black</color>
+
+    <color name="topBar_color">@color/flesh_black</color>
+    <color name="statusBar_color">@color/flesh_black</color>
+
+    <color name="tab_bg_color">@color/tea_green</color>
+    <color name="tab_bg_onclick_color">@color/tea_green_black</color>
+    <color name="tab_text_color">@color/white</color>
+
+    <color name="Snow2">#CDC9C9</color>
+
+
 </resources>
