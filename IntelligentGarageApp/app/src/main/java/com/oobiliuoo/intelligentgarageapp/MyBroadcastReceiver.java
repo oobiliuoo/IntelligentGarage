@@ -11,6 +11,9 @@ import com.oobiliuoo.intelligentgarageapp.utils.MyUtils;
 public class MyBroadcastReceiver extends BroadcastReceiver {
     private Handler handler;
 
+    public MyBroadcastReceiver() {
+    }
+
     public MyBroadcastReceiver(Handler handler) {
         this.handler = handler;
     }

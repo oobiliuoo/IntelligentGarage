@@ -20,11 +20,13 @@ public class MyUtils {
     /**服务器开放的端口号*/
     public static final int IP_PORT = 8081;
 
+    /**广播对象*/
     public static final String CONNECT_SUCCESS_BROADCAST = "com.oobiliuoo.intelligentgarageapp.MY_BROADCAST";
+    /**连接状态*/
     public static final String CONNECT_STATES = "connectStates";
-
-
+    /**连接成功*/
     public static final int CONNECT_SUCCESS = 0;
+    /**连接失败*/
     public static final int CONNECT_FAIL = 1;
 
     /**

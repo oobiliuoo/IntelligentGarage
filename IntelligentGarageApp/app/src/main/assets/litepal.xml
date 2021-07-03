@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<litepal>
+    <!-- 数据库名 -->
+    <dbname value="IntelligentGarage"/>
+    <!-- 版本号 -->
+    <version value="2"/>
+    <list>
+        <!-- 创建表 -->
+        <mapping class="com.oobiliuoo.intelligentgarageapp.bean.ControlCard"/>
+
+    </list>
+</litepal>
