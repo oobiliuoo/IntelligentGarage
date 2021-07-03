@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -40,7 +41,6 @@ public class MyGridViewAdapter extends ArrayAdapter<ControlCard> {
            viewHolder.tvType = view.findViewById(R.id.control_tv_type);
            viewHolder.tvStates = view.findViewById(R.id.control_tv_states);
            viewHolder.aSwitch = view.findViewById(R.id.control_switch);
-
            view.setTag(viewHolder);
        }else {
            view = convertView;
@@ -59,6 +59,46 @@ public class MyGridViewAdapter extends ArrayAdapter<ControlCard> {
        if("OFF".equals(controlCard.getState())){
             viewHolder.aSwitch.setChecked(false);
        }
+
+       viewHolder.aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+           @Override
+           public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+               if(isChecked){
+                   controlCard.setState("ON");
+                   viewHolder.tvStates.setText(controlCard.getState());
+                   if("吊灯".equals(controlCard.getType())){
+                       controlCard.setImg(R.drawable.ceiling_lamp_on);
+                       viewHolder.ivImg.setImageResource(controlCard.getImg());
+                   }
+
+                   if("大灯".equals(controlCard.getType())){
+                       controlCard.setImg(R.drawable.light_on);
+                       viewHolder.ivImg.setImageResource(controlCard.getImg());
+                   }
+                   if("门".equals(controlCard.getType())){
+                       controlCard.setImg(R.drawable.door_open2);
+                       viewHolder.ivImg.setImageResource(controlCard.getImg());
+                   }
+
+               }else {
+                   controlCard.setState("OFF");
+                   viewHolder.tvStates.setText(controlCard.getState());
+                   if("吊灯".equals(controlCard.getType())){
+                       controlCard.setImg(R.drawable.ceiling_lamp_off);
+                       viewHolder.ivImg.setImageResource(controlCard.getImg());
+                   }
+                   if("大灯".equals(controlCard.getType())){
+                       controlCard.setImg(R.drawable.light_off);
+                       viewHolder.ivImg.setImageResource(controlCard.getImg());
+                   }
+                   if("门".equals(controlCard.getType())){
+                       controlCard.setImg(R.drawable.door_closed);
+                       viewHolder.ivImg.setImageResource(controlCard.getImg());
+                   }
+               }
+           }
+       });
+
        return view;
     }
 
