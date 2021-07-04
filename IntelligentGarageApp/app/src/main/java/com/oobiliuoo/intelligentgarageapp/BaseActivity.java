@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.oobiliuoo.intelligentgarageapp.adapter.HostLocationListViewAdapter;
 import com.oobiliuoo.intelligentgarageapp.adapter.MyGridViewAdapter;
 import com.oobiliuoo.intelligentgarageapp.bean.ControlCard;
 import com.oobiliuoo.intelligentgarageapp.utils.MyUtils;
@@ -28,12 +29,7 @@ import org.litepal.LitePal;
 public abstract class BaseActivity extends AppCompatActivity {
 
     private String TAG = "BaseActivity";
-    /**
-     * 点击控件的ID
-     */
-    public int CLICK_ID;
 
-    public boolean IS_CHECKED;
 
     /**
      * 消息对象
@@ -173,34 +169,59 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * 点击事件的监听类
      */
-    class MyLister implements View.OnClickListener,MyGridViewAdapter.MyOnClickListener {
+    class MyLister implements View.OnClickListener, HostLocationListViewAdapter.HostListViewOnClickListener,MyGridViewAdapter.MyOnClickListener {
 
         @Override
         public void onClick(View v) {
-            CLICK_ID = v.getId();
-            initClick();
+            initClick(v);
         }
 
         @Override
         public boolean MyCheckChanged(ControlCard card, boolean isChecked) {
-
-            IS_CHECKED = isChecked;
             return checkChanged(card,isChecked);
+        }
+
+
+        @Override
+        public void HostListOnClick(View v) {
+            initHostListOnClick(v);
+        }
+
+        @Override
+        public void HostListOnLongClick(View v) {
+            initHostLocationLongClick(v);
         }
     }
 
 
+
     /**
      * 提供给子类的点击事件函数
-     * CLICK_ID 点击控件的ID
+     * v 点击控件
      */
-    public abstract void initClick();
+    public abstract void initClick(View v);
 
     /**
      * 提供给子类的GridView it 点击事件
      * IS_CHECK: 表示被选中
+     * card: 哪个控制卡片
      * */
     protected abstract boolean checkChanged(ControlCard card, boolean isChecked);
+
+    /**
+     * 专门处理 HostLocationList 中点击事件
+     * 提供给子类的长按事件函数
+     * v 点击控件
+     */
+    protected abstract void initHostListOnClick(View v);
+
+    /**
+     * 专门处理 HostLocationList 中长按事件
+     * 提供给子类的长按事件函数
+     * v 点击控件
+     */
+    protected abstract boolean initHostLocationLongClick(View v);
+
 
 }
 

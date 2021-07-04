@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 
 import com.oobiliuoo.intelligentgarageapp.R;
 import com.oobiliuoo.intelligentgarageapp.bean.ControlCard;
+import com.oobiliuoo.intelligentgarageapp.bean.HostLocation;
 
 import org.litepal.LitePal;
 
@@ -137,7 +138,6 @@ public class MyUtils {
 
     public static void resetControlCardTable(){
         LitePal.deleteAll(ControlCard.class);
-
         ControlCard card1 = new ControlCard("LED1","车库","吊灯","OFF","1");
         card1.save();
         ControlCard card2 = new ControlCard("LED2","车库外","大灯","OFF","1");
@@ -146,7 +146,6 @@ public class MyUtils {
         card3.save();
         ControlCard card4 = new ControlCard("DOOR2","车库侧门","门","OFF","1");
         card4.save();
-
 
     }
 
@@ -157,11 +156,19 @@ public class MyUtils {
 
                 MyUtils.mLog1("card " +c.getName()+" " + c.getType()+ " " + c.getState());
             }
-
         }
-
-
-
     }
 
+
+    public static void resetHostLocationTable(){
+      //  LitePal.deleteAll(HostLocation.class);
+        HostLocation temp1 = new HostLocation("家","192.168.43.131","8080");
+        temp1.save();
+        HostLocation temp2 = new HostLocation("公司","192.168.43.1","8080");
+        temp2.save();
+        HostLocation temp3 = new HostLocation("老家","192.168.43.131","8080");
+        temp3.save();
+        HostLocation temp4 = new HostLocation("北京","127.0.0.1","8080");
+        temp4.save();
+    }
 }

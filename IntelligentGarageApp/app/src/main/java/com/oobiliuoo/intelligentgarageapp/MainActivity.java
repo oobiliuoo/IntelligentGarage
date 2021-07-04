@@ -1,6 +1,7 @@
 package com.oobiliuoo.intelligentgarageapp;
 
 import android.content.Intent;
+import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -37,7 +38,7 @@ public class MainActivity extends BaseActivity {
 
         initView();
         MyUtils.initImgMap();
-        // MyUtils.resetControlCardTable();
+        MyUtils.resetControlCardTable();
     }
 
     @Override
@@ -69,8 +70,8 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public void initClick() {
-        switch (CLICK_ID) {
+    public void initClick(View v) {
+        switch (v.getId()) {
             case R.id.main_btn_set:
                 Intent intent = new Intent(MainActivity.this, SettingActivity.class);
                 startActivity(intent);
@@ -93,7 +94,17 @@ public class MainActivity extends BaseActivity {
 
         myBinder.sendMyMessage(message);
 
-        return IS_CHECKED;
+        return isChecked;
+    }
+
+    @Override
+    protected void initHostListOnClick(View v) {
+
+    }
+
+    @Override
+    protected boolean initHostLocationLongClick(View v) {
+        return false;
     }
 
     private void initView() {

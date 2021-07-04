@@ -116,7 +116,7 @@ public class MyTcpService extends Service {
             //指定ip地址和端口号
             // 1.创建一个客户端对象Socket,构造方法绑定服务器的IP地址和端口号
             mSocket = new Socket();
-            mSocket.connect(new InetSocketAddress(ip, port), 5 * 1000);
+            mSocket.connect(new InetSocketAddress(ip, port), 1 * 1000);
             if (mSocket != null) {
                 mSocket.setSoTimeout(300);
                 //获取输出流、输入流

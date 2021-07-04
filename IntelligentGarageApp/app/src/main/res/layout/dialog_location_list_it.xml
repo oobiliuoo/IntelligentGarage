@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="360dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:background="@color/Ivory"
+    >
 
     <LinearLayout
+        android:id="@+id/dlli_ll_title"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="5dp"
@@ -18,12 +20,13 @@
             android:id="@+id/dlli_tv_location_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="4"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
             android:text="Host name" />
 
         <Button
+            android:layout_weight="2"
             android:id="@+id/dlli_btn_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,6 +35,7 @@
             android:text="取消" />
 
         <Button
+            android:layout_weight="2"
             android:id="@+id/dlli_btn_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,9 +43,34 @@
             android:background="@drawable/button_drawable4"
             android:text="保存" />
 
+        <ImageButton
+            android:id="@+id/dlli_ibtn_1"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:src="@drawable/ic_baseline_arrow_forward_ios_24" />
+
+        <ImageButton
+            android:id="@+id/dlli_ibtn_remove"
+            android:visibility="gone"
+            android:layout_width="64dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_baseline_remove_circle_24"
+            android:background="@color/orange"
+            />
+        <ImageButton
+            android:id="@+id/dlli_ibtn_edit"
+            android:visibility="gone"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:src="@drawable/ic_outline_edit_24"
+            />
+
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/dlli_ll_info"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
@@ -70,7 +99,8 @@
                 android:gravity="center_vertical|end"
                 android:text="Host Name"
                 app:layout_constraintBaseline_toBaselineOf="@id/tv_1"
-                app:layout_constraintLeft_toRightOf="@id/tv_1" />
+                app:layout_constraintRight_toRightOf="parent"
+                />
 
             <TextView
                 android:id="@+id/tv_2"
@@ -89,8 +119,9 @@
                 android:background="@color/white"
                 android:gravity="center_vertical|end"
                 android:text="192.168.43.131"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintBaseline_toBaselineOf="@id/tv_2"
-                app:layout_constraintLeft_toRightOf="@id/tv_2" />
+                />
 
             <TextView
                 android:id="@+id/tv_3"
@@ -109,8 +140,9 @@
                 android:background="@color/white"
                 android:gravity="center_vertical|end"
                 android:text="8080"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintBaseline_toBaselineOf="@id/tv_3"
-                app:layout_constraintLeft_toRightOf="@id/tv_3" />
+                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>

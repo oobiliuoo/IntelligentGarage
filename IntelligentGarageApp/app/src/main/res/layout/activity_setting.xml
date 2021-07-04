@@ -218,7 +218,7 @@
             android:id="@+id/set_btn_connect"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_drawable2"
+            android:background="@drawable/button_drawable3"
             android:text="重新连接"
             android:textColor="@color/white" />
 
