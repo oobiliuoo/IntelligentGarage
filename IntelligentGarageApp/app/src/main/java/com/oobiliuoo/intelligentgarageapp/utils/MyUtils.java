@@ -9,6 +9,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.oobiliuoo.intelligentgarageapp.R;
+import com.oobiliuoo.intelligentgarageapp.bean.ControlCard;
+
+import org.litepal.LitePal;
+
+import java.util.HashMap;
+import java.util.List;
+
 
 /**
  * @author biliu
@@ -21,13 +29,40 @@ public class MyUtils {
     public static final int IP_PORT = 8081;
 
     /**广播对象*/
-    public static final String CONNECT_SUCCESS_BROADCAST = "com.oobiliuoo.intelligentgarageapp.MY_BROADCAST";
-    /**连接状态*/
-    public static final String CONNECT_STATES = "connectStates";
+    public static final String MY_BROADCAST = "com.oobiliuoo.intelligentgarageapp.MY_BROADCAST";
+    /**
+     * 广播数据模式标志
+     * CONNECT_SUCCESS ： 与服务器连接成功
+     * CONNECT_FAIL    :  与服务器断开连接
+     * RECEIVE_DATA    :  收到数据信息
+     * RECEIVE_NOTIFY  :  收到通知信息
+     * */
+    public static final String BROADCAST_MSG = "broadcastMsg";
     /**连接成功*/
     public static final int CONNECT_SUCCESS = 0;
     /**连接失败*/
     public static final int CONNECT_FAIL = 1;
+
+
+    /**收到信息的模式
+     * DATA： 数据信息
+     * NOTIFY： 通知信息
+     * */
+    public static final String[] RECEIVE_MODE = {"DATA","NOTIFY"};
+    /**收到标志*/
+    public static final String RECEIVE = "receive";
+    /**收到数据*/
+    public static final int RECEIVE_DATA = 3;
+    /**收到通知*/
+    public static final int RECEIVE_NOTIFY = 4;
+
+    /** DIVISION: 分割符，根据这个拆分字符串 */
+    public static final String DIVISION = "::";
+    public static final String DIVISION2 = "-";
+
+
+    /**保存控制卡片的图片*/
+    public static HashMap<String,int[]> IMG_MAP = new HashMap<>();
 
     /**
      *  相当于 log.i("mLog1",text)
@@ -88,6 +123,45 @@ public class MyUtils {
         return tel;
     }
 
+    /**
+     * 初始化图片
+     * 在这里设置每种控制卡片开/关对应的图片
+     * */
+    public static void initImgMap(){
+        IMG_MAP.put("吊灯",new int[]{R.drawable.ceiling_lamp_off,R.drawable.ceiling_lamp_on});
+        IMG_MAP.put("大灯",new int[]{R.drawable.light_off,R.drawable.light_on});
+        IMG_MAP.put("门",new int[]{R.drawable.door_closed,R.drawable.door_open2});
+        mLog1("img map init");
+    }
 
+
+    public static void resetControlCardTable(){
+        LitePal.deleteAll(ControlCard.class);
+
+        ControlCard card1 = new ControlCard("LED1","车库","吊灯","OFF","1");
+        card1.save();
+        ControlCard card2 = new ControlCard("LED2","车库外","大灯","OFF","1");
+        card2.save();
+        ControlCard card3 = new ControlCard("DOOR1","车库","门","OFF","1");
+        card3.save();
+        ControlCard card4 = new ControlCard("DOOR2","车库侧门","门","OFF","1");
+        card4.save();
+
+
+    }
+
+    public static void showControlCardAll(){
+        List<ControlCard> list = LitePal.findAll(ControlCard.class);
+        if(list.size() > 0){
+            for(ControlCard c : list){
+
+                MyUtils.mLog1("card " +c.getName()+" " + c.getType()+ " " + c.getState());
+            }
+
+        }
+
+
+
+    }
 
 }

@@ -12,23 +12,32 @@ import org.litepal.crud.LitePalSupport;
  * 同时作为表
  */
 public class ControlCard extends LitePalSupport {
+    private String name;
     private String location;
     private String type;
     @Column(defaultValue = "OFF")
     private String state;
-    @Column(defaultValue = "0")
+    @Column(defaultValue = "1")
     private String enable;
     private int img;
 
     public ControlCard() {
     }
 
-    public ControlCard(String location, String type, String state, int img,String enable) {
+    public ControlCard(String name, String location, String type, String state, String enable) {
+        this.name = name;
         this.location = location;
         this.type = type;
         this.state = state;
-        this.img = img;
         this.enable = enable;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getLocation() {

@@ -13,10 +13,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.oobiliuoo.intelligentgarageapp.BaseActivity;
 import com.oobiliuoo.intelligentgarageapp.R;
 import com.oobiliuoo.intelligentgarageapp.bean.ControlCard;
+import com.oobiliuoo.intelligentgarageapp.bean.MyMessage;
+import com.oobiliuoo.intelligentgarageapp.utils.MyUtils;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author biliu
@@ -24,11 +30,15 @@ import java.util.List;
 public class MyGridViewAdapter extends ArrayAdapter<ControlCard> {
 
     private int resourceId;
+    MyOnClickListener clickListener;
 
-    public MyGridViewAdapter(@NonNull Context context, int resource, @NonNull List<ControlCard> objects) {
+
+    public MyGridViewAdapter(@NonNull Context context, int resource, @NonNull List<ControlCard> objects,MyOnClickListener myOnClickListener) {
         super(context, resource, objects);
         resourceId = resource;
+        clickListener = myOnClickListener;
     }
+
 
     @NonNull
     @Override
@@ -55,86 +65,43 @@ public class MyGridViewAdapter extends ArrayAdapter<ControlCard> {
         viewHolder.tvType.setText(controlCard.getType());
         viewHolder.tvStates.setText(controlCard.getState());
 
-        if ("ON".equals(controlCard.getState())) {
-            viewHolder.aSwitch.setChecked(true);
-            viewHolder.tvStates.setText(controlCard.getState());
-            if ("吊灯".equals(controlCard.getType())) {
-                controlCard.setImg(R.drawable.ceiling_lamp_on);
-                viewHolder.ivImg.setImageResource(controlCard.getImg());
-            }
-
-            if ("大灯".equals(controlCard.getType())) {
-                controlCard.setImg(R.drawable.light_on);
-                viewHolder.ivImg.setImageResource(controlCard.getImg());
-            }
-            if ("门".equals(controlCard.getType())) {
-                controlCard.setImg(R.drawable.door_open2);
-                viewHolder.ivImg.setImageResource(controlCard.getImg());
-            }
-        }
-
-        if ("OFF".equals(controlCard.getState())) {
-            viewHolder.aSwitch.setChecked(false);
-            viewHolder.tvStates.setText(controlCard.getState());
-            if ("吊灯".equals(controlCard.getType())) {
-                controlCard.setImg(R.drawable.ceiling_lamp_off);
-                viewHolder.ivImg.setImageResource(controlCard.getImg());
-            }
-            if ("大灯".equals(controlCard.getType())) {
-                controlCard.setImg(R.drawable.light_off);
-                viewHolder.ivImg.setImageResource(controlCard.getImg());
-            }
-            if ("门".equals(controlCard.getType())) {
-                controlCard.setImg(R.drawable.door_closed);
-                viewHolder.ivImg.setImageResource(controlCard.getImg());
-            }
-        }
-
+        choseImg(controlCard);
+        viewHolder.ivImg.setImageResource(controlCard.getImg());
+        viewHolder.aSwitch.setChecked("ON".equals(controlCard.getState()));
         viewHolder.aSwitch.setEnabled("1".equals(controlCard.getEnable()));
+
 
         viewHolder.aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+
+                if(clickListener.MyCheckChanged(controlCard,isChecked)){
                     controlCard.setState("ON");
-                    viewHolder.tvStates.setText(controlCard.getState());
-                    if ("吊灯".equals(controlCard.getType())) {
-                        controlCard.setImg(R.drawable.ceiling_lamp_on);
-                        viewHolder.ivImg.setImageResource(controlCard.getImg());
-                    }
-
-                    if ("大灯".equals(controlCard.getType())) {
-                        controlCard.setImg(R.drawable.light_on);
-                        viewHolder.ivImg.setImageResource(controlCard.getImg());
-                    }
-                    if ("门".equals(controlCard.getType())) {
-                        controlCard.setImg(R.drawable.door_open2);
-                        viewHolder.ivImg.setImageResource(controlCard.getImg());
-                    }
-
-                } else {
+                }else{
                     controlCard.setState("OFF");
-                    viewHolder.tvStates.setText(controlCard.getState());
-                    if ("吊灯".equals(controlCard.getType())) {
-                        controlCard.setImg(R.drawable.ceiling_lamp_off);
-                        viewHolder.ivImg.setImageResource(controlCard.getImg());
-                    }
-                    if ("大灯".equals(controlCard.getType())) {
-                        controlCard.setImg(R.drawable.light_off);
-                        viewHolder.ivImg.setImageResource(controlCard.getImg());
-                    }
-                    if ("门".equals(controlCard.getType())) {
-                        controlCard.setImg(R.drawable.door_closed);
-                        viewHolder.ivImg.setImageResource(controlCard.getImg());
-                    }
                 }
+
+                viewHolder.tvStates.setText(controlCard.getState());
+                choseImg(controlCard);
+                viewHolder.ivImg.setImageResource(controlCard.getImg());
+                controlCard.save();
+
             }
         });
+
+
 
         return view;
     }
 
-    private void ON_style() {
+    /**选择合适图片，图片数据保存在MyUtils的IMG——MAP中*/
+    private void choseImg(ControlCard card) {
+        int i[] = MyUtils.IMG_MAP.get(card.getType());
+        if("ON".equals(card.getState())){
+            card.setImg(i[1]);
+        }else {
+            card.setImg(i[0]);
+        }
 
     }
 
@@ -145,5 +112,10 @@ public class MyGridViewAdapter extends ArrayAdapter<ControlCard> {
         TextView tvType;
         TextView tvStates;
         Switch aSwitch;
+    }
+
+    /**通过接口回调，使得在活动中控制监听事件*/
+    public interface MyOnClickListener{
+        public boolean MyCheckChanged(ControlCard card, boolean isChecked);
     }
 }

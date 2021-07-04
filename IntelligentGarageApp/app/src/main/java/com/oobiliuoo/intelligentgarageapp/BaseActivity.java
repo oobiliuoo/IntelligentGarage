@@ -18,17 +18,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.oobiliuoo.intelligentgarageapp.adapter.MyGridViewAdapter;
+import com.oobiliuoo.intelligentgarageapp.bean.ControlCard;
 import com.oobiliuoo.intelligentgarageapp.utils.MyUtils;
 
 import org.litepal.LitePal;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    private String TGA = "BaseActivity";
+    private String TAG = "BaseActivity";
     /**
      * 点击控件的ID
      */
     public int CLICK_ID;
+
+    public boolean IS_CHECKED;
+
     /**
      * 消息对象
      */
@@ -51,7 +56,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             myBinder = (MyTcpService.MyBinder) service;
-            MyUtils.mLog1(TGA, "bind success");
+            MyUtils.mLog1(TAG, "bind success");
         }
 
         @Override
@@ -97,7 +102,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onResume();
         intentFilter = new IntentFilter();
         // 添加动作对象
-        intentFilter.addAction(MyUtils.CONNECT_SUCCESS_BROADCAST);
+        intentFilter.addAction(MyUtils.MY_BROADCAST);
         myBroadcastReceiver = new MyBroadcastReceiver(handler);
         // 注册广播
         registerReceiver(myBroadcastReceiver, intentFilter);
@@ -114,6 +119,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        MyUtils.mLog1("BaseActivity onDestroy");
+        Intent bindIntent = new Intent(BaseActivity.this, MyTcpService.class);
+        stopService(bindIntent);
     }
 
     /**
@@ -160,14 +168,22 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * 点击事件的监听类
      */
-    class MyLister implements View.OnClickListener {
+    class MyLister implements View.OnClickListener,MyGridViewAdapter.MyOnClickListener {
 
         @Override
         public void onClick(View v) {
             CLICK_ID = v.getId();
             initClick();
         }
+
+        @Override
+        public boolean MyCheckChanged(ControlCard card, boolean isChecked) {
+
+            IS_CHECKED = isChecked;
+            return checkChanged(card,isChecked);
+        }
     }
+
 
     /**
      * 提供给子类的点击事件函数
@@ -175,6 +191,11 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     public abstract void initClick();
 
+    /**
+     * 提供给子类的GridView it 点击事件
+     * IS_CHECK: 表示被选中
+     * */
+    protected abstract boolean checkChanged(ControlCard card, boolean isChecked);
 
 }
 

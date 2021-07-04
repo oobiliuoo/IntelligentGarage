@@ -2,11 +2,10 @@ package com.oobiliuoo.intelligentgarageapp;
 
 import android.app.Service;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Binder;
-import android.os.Handler;
 import android.os.IBinder;
 
+import com.oobiliuoo.intelligentgarageapp.bean.MyMessage;
 import com.oobiliuoo.intelligentgarageapp.utils.MyUtils;
 
 import java.io.IOException;
@@ -89,6 +88,11 @@ public class MyTcpService extends Service {
             }
         }
 
+        public void sendMyMessage(MyMessage myMessage){
+            sendMsg = myMessage.getMessage();
+            send();
+        }
+
 
     }
 
@@ -119,8 +123,8 @@ public class MyTcpService extends Service {
                 mOutStream = mSocket.getOutputStream();
                 mInStream = mSocket.getInputStream();
                 MyUtils.mLog1(TGA, "连接成功");
-                Intent intent = new Intent(MyUtils.CONNECT_SUCCESS_BROADCAST);
-                intent.putExtra(MyUtils.CONNECT_STATES,MyUtils.CONNECT_SUCCESS);
+                Intent intent = new Intent(MyUtils.MY_BROADCAST);
+                intent.putExtra(MyUtils.BROADCAST_MSG,MyUtils.CONNECT_SUCCESS);
                 sendBroadcast(intent);
                 receive();
             } else {
@@ -129,8 +133,8 @@ public class MyTcpService extends Service {
         } catch (Exception e) {
             e.printStackTrace();
             MyUtils.mLog1(TGA, "连接失败");
-            Intent intent = new Intent(MyUtils.CONNECT_SUCCESS_BROADCAST);
-            intent.putExtra(MyUtils.CONNECT_STATES,MyUtils.CONNECT_FAIL);
+            Intent intent = new Intent(MyUtils.MY_BROADCAST);
+            intent.putExtra(MyUtils.BROADCAST_MSG,MyUtils.CONNECT_FAIL);
             sendBroadcast(intent);
         }
     }
@@ -143,6 +147,17 @@ public class MyTcpService extends Service {
                     String msg = receiveMsg();
                     if (!"".equals(msg)) {
                         MyUtils.mLog1(TGA, "recv:" + msg);
+                        MyMessage message = new MyMessage(msg);
+                        switch (message.getIntMode()){
+                            case 0:
+                                Intent intent = new Intent(MyUtils.MY_BROADCAST);
+                                intent.putExtra(MyUtils.BROADCAST_MSG,MyUtils.RECEIVE_DATA);
+                                intent.putExtra(MyUtils.RECEIVE,message.getMessage());
+                                sendBroadcast(intent);
+                                break;
+                            default:
+                        }
+
                     }
                 }
             }
@@ -162,5 +177,33 @@ public class MyTcpService extends Service {
         return msg;
     }
 
+    private void send(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (mSocket != null && mSocket.isConnected() ) {
+                    writeMsg();
+
+                } else {
+                    MyUtils.mLog1( "server: 服务处于断开状态，请检查网络");
+                    return;
+                }
+            }
+        }).start();
+    }
+
+    private void writeMsg(){
+        if (sendMsg.length() == 0 || mOutStream == null) {
+            MyUtils.mLog1("server: send fail. check the message or internet");
+            return;
+        }
+        try {   //发送
+            mOutStream.write(sendMsg.getBytes());
+            mOutStream.flush();
+            MyUtils.mLog1("server: send success. the msg: " + sendMsg);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

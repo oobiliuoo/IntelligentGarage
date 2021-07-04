@@ -240,7 +240,6 @@
             android:horizontalSpacing="10dp"
             android:numColumns="auto_fit"
             android:scrollbars="none"
-            android:stackFromBottom="true"
             android:stretchMode="columnWidth"
             android:transcriptMode="alwaysScroll"
             android:verticalSpacing="10dp" />

@@ -20,15 +20,20 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        int connectStates = intent.getIntExtra(MyUtils.CONNECT_STATES,-1);
-        switch (connectStates){
+        int broadcastMsg = intent.getIntExtra(MyUtils.BROADCAST_MSG,-1);
+        switch (broadcastMsg){
             case MyUtils.CONNECT_SUCCESS:
                 MyUtils.sendMessage(handler,MyUtils.CONNECT_SUCCESS,null);
                 break;
             case MyUtils.CONNECT_FAIL:
                 MyUtils.sendMessage(handler,MyUtils.CONNECT_FAIL,null);
                 break;
+            case MyUtils.RECEIVE_DATA:
+                MyUtils.sendMessage(handler,MyUtils.RECEIVE_DATA,intent.getStringExtra(MyUtils.RECEIVE));
+                break;
             default:
         }
+
+
     }
 }

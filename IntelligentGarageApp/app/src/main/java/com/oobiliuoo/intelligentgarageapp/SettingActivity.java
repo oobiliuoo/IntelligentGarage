@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
+import com.oobiliuoo.intelligentgarageapp.bean.ControlCard;
 import com.oobiliuoo.intelligentgarageapp.utils.MyUtils;
 
 public class SettingActivity extends BaseActivity {
@@ -36,6 +37,7 @@ public class SettingActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         unbindService(connection);
+        MyUtils.mLog1("SettingActivity onDestroy");
     }
 
 
@@ -65,6 +67,11 @@ public class SettingActivity extends BaseActivity {
             default:
                 break;
         }
+    }
+
+    @Override
+    protected boolean checkChanged(ControlCard card, boolean isChecked) {
+        return false;
     }
 
     @Override
