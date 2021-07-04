@@ -29,6 +29,10 @@
     <color name="tab_text_color">@color/white</color>
 
     <color name="Snow2">#CDC9C9</color>
+    <color name="GhostWhite">#F8F8FF</color>
+    <color name="LightSalmon">#FFA07A</color>
+    <color name="Ivory">#FFFFF0</color>
+    <color name="WhiteSmoke">#F5F5F5</color>
 
 
 </resources>

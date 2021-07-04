@@ -4,10 +4,13 @@
     <!-- 数据库名 -->
     <dbname value="IntelligentGarage"/>
     <!-- 版本号 -->
-    <version value="3"/>
+    <version value="4"/>
     <list>
         <!-- 创建表 -->
         <mapping class="com.oobiliuoo.intelligentgarageapp.bean.ControlCard"/>
+        <mapping class="com.oobiliuoo.intelligentgarageapp.bean.HostLocation"/>
+        <mapping class="com.oobiliuoo.intelligentgarageapp.bean.PermitCar"/>
+        <mapping class="com.oobiliuoo.intelligentgarageapp.bean.NotifyInfo"/>
 
     </list>
 </litepal>

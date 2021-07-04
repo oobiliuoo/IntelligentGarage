@@ -11,6 +11,7 @@
         android:id="@+id/set_toorbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         app:navigationIcon="@drawable/ic_baseline_arrow_left_24"
         app:title="设置" />
 
@@ -18,32 +19,44 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="4"
+        android:background="@color/GhostWhite"
         android:padding="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/GhostWhite"
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/set_ll_location"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:background="@drawable/underline"
+                android:orientation="vertical"
+                android:layout_marginTop="5dp"
                 android:gravity="center">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Biliu Home"
-                    android:textColor="@color/front_black"
-                    android:textSize="20sp" />
+                <LinearLayout
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Biliu Home"
+                        android:textColor="@color/front_black"
+                        android:textSize="20sp" />
 
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:src="@drawable/ic_baseline_arrow_forward_ios_24" />
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:src="@drawable/ic_baseline_arrow_forward_ios_24" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
 
@@ -51,6 +64,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@drawable/underline"
+                android:layout_marginTop="5dp"
                 android:gravity="center">
 
                 <TextView
@@ -75,6 +89,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@drawable/underline"
+                android:layout_marginTop="5dp"
                 android:gravity="center">
 
                 <TextView
@@ -99,6 +114,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@drawable/underline"
+                android:layout_marginTop="5dp"
                 android:gravity="center">
 
                 <TextView
@@ -131,6 +147,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@drawable/underline"
+                android:layout_marginTop="5dp"
                 android:gravity="center">
 
                 <TextView
@@ -163,6 +180,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@drawable/underline"
+                android:layout_marginTop="5dp"
                 android:gravity="center">
 
                 <TextView
@@ -191,6 +209,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
+        android:background="@color/GhostWhite"
         android:gravity="center"
         android:paddingLeft="20dp"
         android:paddingRight="20dp">

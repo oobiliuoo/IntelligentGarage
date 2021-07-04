@@ -1,11 +1,9 @@
 package com.oobiliuoo.intelligentgarageapp;
 
 import android.content.Intent;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 
 import com.oobiliuoo.intelligentgarageapp.adapter.MyGridViewAdapter;
 import com.oobiliuoo.intelligentgarageapp.bean.ControlCard;
@@ -25,6 +23,8 @@ public class MainActivity extends BaseActivity {
     private GridView gridView;
     private List<ControlCard> controlCardList = new ArrayList<>();
     private ImageButton btnSet;
+    private ProgressBar pbBrightness;
+
     /**
      * 收到的信息
      */
@@ -34,9 +34,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void init() {
         setContentView(R.layout.activity_main);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        getWindow().setStatusBarColor(getResources().getColor(R.color.Snow2));
+
         initView();
         MyUtils.initImgMap();
         // MyUtils.resetControlCardTable();
@@ -104,6 +102,9 @@ public class MainActivity extends BaseActivity {
         btnSet.setOnClickListener(new MyLister());
         gridView = findViewById(R.id.main_gridview);
 
+        pbBrightness = (ProgressBar) findViewById(R.id.main_pb_brightness);
+
+
     }
 
     private void initCardInfo() {
@@ -125,7 +126,7 @@ public class MainActivity extends BaseActivity {
 
         }
 
-        MyGridViewAdapter adapter = new MyGridViewAdapter(MainActivity.this, R.layout.layout_it_contral, controlCardList, new MyLister());
+        MyGridViewAdapter adapter = new MyGridViewAdapter(MainActivity.this, R.layout.layout_it_control, controlCardList, new MyLister());
         gridView.deferNotifyDataSetChanged();
         gridView.setAdapter(adapter);
     }
@@ -155,6 +156,11 @@ public class MainActivity extends BaseActivity {
             case 0:
                 ArrayList<String[]> dataList = message.getDataContext();
                 for (String[] data : dataList) {
+                    if("LIGHT".equals(data[0])){
+                        if(MyUtils.isNumeric(data[1])){
+                            pbBrightness.setProgress(Integer.valueOf(data[1]).intValue());
+                        }
+                    }
                     List<ControlCard> controlCards = LitePal.where("name = ?", data[0]).find(ControlCard.class);
                     if (controlCards.size() > 0) {
                         if ("ON".equals(data[1]) || "OFF".equals(data[1])) {

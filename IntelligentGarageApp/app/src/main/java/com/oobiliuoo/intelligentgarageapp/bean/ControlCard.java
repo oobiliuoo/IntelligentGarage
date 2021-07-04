@@ -12,8 +12,11 @@ import org.litepal.crud.LitePalSupport;
  * 同时作为表
  */
 public class ControlCard extends LitePalSupport {
+
+    @Column(unique = true)
     private String name;
     private String location;
+    private String ipAddress;
     private String type;
     @Column(defaultValue = "OFF")
     private String state;
@@ -46,6 +49,14 @@ public class ControlCard extends LitePalSupport {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
 
     public String getType() {
