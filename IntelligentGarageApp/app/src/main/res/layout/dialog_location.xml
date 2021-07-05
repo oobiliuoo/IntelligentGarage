@@ -30,6 +30,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
+                android:id="@+id/location_ibtn_add"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_baseline_add_circle_24"

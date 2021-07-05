@@ -161,7 +161,7 @@ public class MyUtils {
 
 
     public static void resetHostLocationTable(){
-      //  LitePal.deleteAll(HostLocation.class);
+        LitePal.deleteAll(HostLocation.class);
         HostLocation temp1 = new HostLocation("家","192.168.43.131","8080");
         temp1.save();
         HostLocation temp2 = new HostLocation("公司","192.168.43.1","8080");

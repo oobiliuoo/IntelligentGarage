@@ -5,11 +5,13 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -22,6 +24,7 @@ import androidx.core.content.ContextCompat;
 import com.oobiliuoo.intelligentgarageapp.adapter.HostLocationListViewAdapter;
 import com.oobiliuoo.intelligentgarageapp.adapter.MyGridViewAdapter;
 import com.oobiliuoo.intelligentgarageapp.bean.ControlCard;
+import com.oobiliuoo.intelligentgarageapp.bean.HostLocation;
 import com.oobiliuoo.intelligentgarageapp.utils.MyUtils;
 
 import org.litepal.LitePal;
@@ -30,11 +33,13 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private String TAG = "BaseActivity";
 
-
     /**
-     * 消息对象
+     * 读取本地信息
      */
-    public Message MESSAGE;
+    public SharedPreferences pref;
+    public SharedPreferences.Editor prefEditor;
+    public HostLocation host;
+
 
     /**
      * 联系和操作服务的类
@@ -69,8 +74,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
-            MESSAGE = msg;
-            initHandleMessage();
+            initHandleMessage(msg);
 
         }
     };
@@ -79,7 +83,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * 消息处理事件
      * MESSAGE 收到的消息
      */
-    protected abstract void initHandleMessage();
+    protected abstract void initHandleMessage(Message msg);
 
 
     /**
@@ -92,10 +96,20 @@ public abstract class BaseActivity extends AppCompatActivity {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         getWindow().setStatusBarColor(getResources().getColor(R.color.Snow2));
 
+        initData();
         checkPermission();
         initServer();
         LitePal.initialize(this);
         init();
+    }
+
+    public void initData() {
+        pref = getSharedPreferences("data",MODE_PRIVATE);
+        prefEditor = getSharedPreferences("data",MODE_PRIVATE).edit();
+        String hostName = pref.getString("hostname","home");
+        String ip = pref.getString("ip","127.0.0.1");
+        String port = pref.getString("port","8080");
+        host = new HostLocation(hostName,ip,port);
     }
 
     @Override
@@ -124,6 +138,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         Intent bindIntent = new Intent(BaseActivity.this, MyTcpService.class);
         stopService(bindIntent);
     }
+
 
     /**
      * 绑定服务
@@ -166,10 +181,14 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     public abstract void init();
 
+    private void readCurrentHostLocation(){
+
+    }
+
     /**
      * 点击事件的监听类
      */
-    class MyLister implements View.OnClickListener, HostLocationListViewAdapter.HostListViewOnClickListener,MyGridViewAdapter.MyOnClickListener {
+    class MyLister implements View.OnClickListener,MyGridViewAdapter.MyOnClickListener {
 
         @Override
         public void onClick(View v) {
@@ -182,17 +201,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 
 
-        @Override
-        public void HostListOnClick(View v) {
-            initHostListOnClick(v);
-        }
-
-        @Override
-        public void HostListOnLongClick(View v) {
-            initHostLocationLongClick(v);
-        }
     }
-
 
 
     /**
@@ -208,19 +217,8 @@ public abstract class BaseActivity extends AppCompatActivity {
      * */
     protected abstract boolean checkChanged(ControlCard card, boolean isChecked);
 
-    /**
-     * 专门处理 HostLocationList 中点击事件
-     * 提供给子类的长按事件函数
-     * v 点击控件
-     */
-    protected abstract void initHostListOnClick(View v);
 
-    /**
-     * 专门处理 HostLocationList 中长按事件
-     * 提供给子类的长按事件函数
-     * v 点击控件
-     */
-    protected abstract boolean initHostLocationLongClick(View v);
+
 
 
 }

@@ -1,13 +1,26 @@
 package com.oobiliuoo.intelligentgarageapp;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
+import android.util.Log;
+import android.widget.Toast;
+
+import androidx.core.app.NotificationCompat;
 
 import com.oobiliuoo.intelligentgarageapp.bean.MyMessage;
 import com.oobiliuoo.intelligentgarageapp.utils.MyUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -20,7 +33,7 @@ import java.net.Socket;
  */
 public class MyTcpService extends Service {
 
-    private String TGA = "server";
+    private String TGA = "mLog";
 
     private MyBinder myBinder = new MyBinder();
     private Socket mSocket;
@@ -97,8 +110,11 @@ public class MyTcpService extends Service {
     }
 
     private void initIpAndPort() {
-        ip = MyUtils.HOST_IP_ADDRESS;
-        port = MyUtils.IP_PORT;
+        SharedPreferences pref = getSharedPreferences("data",MODE_PRIVATE);
+
+        ip = pref.getString("ip","127.0.0.1");
+        String mPort = pref.getString("port","8080");
+        port = Integer.valueOf(mPort).intValue();
     }
 
     private void connect(){
@@ -123,6 +139,12 @@ public class MyTcpService extends Service {
                 mOutStream = mSocket.getOutputStream();
                 mInStream = mSocket.getInputStream();
                 MyUtils.mLog1(TGA, "连接成功");
+
+                SharedPreferences.Editor editor = getSharedPreferences("data",MODE_PRIVATE).edit();
+                editor.putBoolean("connectSuccess",true);
+                editor.apply();
+
+                // 发送广播
                 Intent intent = new Intent(MyUtils.MY_BROADCAST);
                 intent.putExtra(MyUtils.BROADCAST_MSG,MyUtils.CONNECT_SUCCESS);
                 sendBroadcast(intent);
@@ -133,6 +155,9 @@ public class MyTcpService extends Service {
         } catch (Exception e) {
             e.printStackTrace();
             MyUtils.mLog1(TGA, "连接失败");
+            SharedPreferences.Editor editor = getSharedPreferences("data",MODE_PRIVATE).edit();
+            editor.putBoolean("connectSuccess",false);
+            editor.apply();
             Intent intent = new Intent(MyUtils.MY_BROADCAST);
             intent.putExtra(MyUtils.BROADCAST_MSG,MyUtils.CONNECT_FAIL);
             sendBroadcast(intent);
@@ -154,6 +179,10 @@ public class MyTcpService extends Service {
                                 intent.putExtra(MyUtils.BROADCAST_MSG,MyUtils.RECEIVE_DATA);
                                 intent.putExtra(MyUtils.RECEIVE,message.getMessage());
                                 sendBroadcast(intent);
+                                break;
+                            case 1:
+                                MyUtils.mLog1("server: notify");
+                                sendNotify(message);
                                 break;
                             default:
                         }
@@ -204,6 +233,38 @@ public class MyTcpService extends Service {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+
+    void sendNotify(MyMessage myMessage){
+        String text = myMessage.getContext();
+        String id = "my_channel_01";
+        String name="我是渠道名字";
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        Notification notification = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel mChannel = new NotificationChannel(id, name, NotificationManager.IMPORTANCE_LOW);
+            notificationManager.createNotificationChannel(mChannel);
+            notification = new Notification.Builder(this)
+                    .setChannelId(id)
+                    .setContentTitle("有车辆入库")
+                    .setContentText(text)
+                    .setWhen(System.currentTimeMillis())
+                    .setSmallIcon(R.drawable.logo_16)
+                    .build();
+        } else {
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext())
+                    .setContentTitle("5 new messages")
+                    .setContentText(text)
+                    .setSmallIcon(R.drawable.logo_16)
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.logo_48))
+                    .setOngoing(true)
+                    ;//无效
+            notification = notificationBuilder.build();
+        }
+        notificationManager.notify(111123, notification);
+
     }
 
 }

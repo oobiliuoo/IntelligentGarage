@@ -5,9 +5,9 @@
     <application
         android:name="org.litepal.LitePalApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="智控"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:icon="@drawable/logo_48"
+        android:label="致酷控制"
+        android:roundIcon="@drawable/logo_48"
         android:supportsRtl="true"
         android:theme="@style/Theme.IntelligentGarageApp">
         <service
@@ -32,6 +32,8 @@
             </intent-filter>
         </receiver>
     </application>
+
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
 
 </manifest>

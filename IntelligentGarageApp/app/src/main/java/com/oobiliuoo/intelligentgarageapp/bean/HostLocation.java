@@ -41,7 +41,15 @@ public class HostLocation extends LitePalSupport {
         return port;
     }
 
+    public int getIntPort(){
+        return Integer.valueOf(port).intValue();
+    }
+
     public void setPort(String port) {
         this.port = port;
+    }
+
+    public void setPort(int port){
+        this.port = Integer.toString(port);
     }
 }

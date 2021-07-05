@@ -1,10 +1,13 @@
 package com.oobiliuoo.intelligentgarageapp;
 
 import android.content.Intent;
+import android.os.Message;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.oobiliuoo.intelligentgarageapp.adapter.MyGridViewAdapter;
 import com.oobiliuoo.intelligentgarageapp.bean.ControlCard;
@@ -21,10 +24,14 @@ import java.util.List;
  */
 public class MainActivity extends BaseActivity {
 
+    private boolean showConnectToast = true;
     private GridView gridView;
     private List<ControlCard> controlCardList = new ArrayList<>();
     private ImageButton btnSet;
     private ProgressBar pbBrightness;
+    private TextView tvHostName;
+    private ImageView ivHome;
+    private TextView tvHint;
 
     /**
      * 收到的信息
@@ -45,22 +52,27 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         initCardInfo();
+        initData();
+        tvHostName.setText(host.getLocationName());
+        MyUtils.mLog1("MA: OnResume host:" + host.getLocationName());
     }
 
     @Override
-    protected void initHandleMessage() {
-        switch (MESSAGE.what) {
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void initHandleMessage(Message msg) {
+        switch (msg.what) {
             case MyUtils.CONNECT_SUCCESS:
-                MyUtils.showToast(MainActivity.this, "连接成功");
                 doOnConnectSuccess();
                 break;
             case MyUtils.CONNECT_FAIL:
-                MyUtils.showToast(MainActivity.this, "连接失败");
                 doOnConnectFail();
                 break;
             case MyUtils.RECEIVE_DATA:
-                RECEIVE_MESSAGE = MESSAGE.obj.toString();
-                MyUtils.showToast(MainActivity.this, "MA 收到数据: " + MESSAGE.obj.toString());
+                RECEIVE_MESSAGE = msg.obj.toString();
                 doOnReceiveData();
                 MyUtils.showControlCardAll();
 
@@ -97,15 +109,6 @@ public class MainActivity extends BaseActivity {
         return isChecked;
     }
 
-    @Override
-    protected void initHostListOnClick(View v) {
-
-    }
-
-    @Override
-    protected boolean initHostLocationLongClick(View v) {
-        return false;
-    }
 
     private void initView() {
 
@@ -115,6 +118,12 @@ public class MainActivity extends BaseActivity {
 
         pbBrightness = (ProgressBar) findViewById(R.id.main_pb_brightness);
 
+        tvHostName = (TextView) findViewById(R.id.main_tv_hostname);
+        tvHostName.setText(host.getLocationName());
+
+        ivHome = (ImageView) findViewById(R.id.main_iv_home);
+
+        tvHint = (TextView) findViewById(R.id.main_tv_hint);
 
     }
 
@@ -143,20 +152,33 @@ public class MainActivity extends BaseActivity {
     }
 
     private void doOnConnectSuccess() {
+
+        if(showConnectToast){
+            MyUtils.showToast(MainActivity.this, "连接成功");
+            showConnectToast = false;
+        }
         ControlCard controlCard = new ControlCard();
         controlCard.setEnable("1");
         controlCard.setState("OFF");
         controlCard.updateAll();
         initCardInfo();
+        ivHome.setImageResource(R.drawable.home_on);
+        tvHint.setText("智能网关监控中");
+
     }
 
     private void doOnConnectFail() {
+        if(showConnectToast){
+            MyUtils.showToast(MainActivity.this, "连接失败");
+            showConnectToast = false;
+        }
         ControlCard controlCard = new ControlCard();
         controlCard.setEnable("0");
         controlCard.setState("OFF");
         controlCard.updateAll();
         initCardInfo();
-
+        ivHome.setImageResource(R.drawable.home_off);
+        tvHint.setText("未连接");
     }
 
 

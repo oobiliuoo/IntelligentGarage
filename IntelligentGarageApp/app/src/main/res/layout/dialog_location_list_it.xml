@@ -82,7 +82,7 @@
             android:padding="20dp">
 
             <TextView
-                android:id="@+id/tv_1"
+                android:id="@+id/main_tv_hint"
                 android:layout_width="80dp"
                 android:layout_height="50dp"
                 android:layout_marginTop="10dp"
@@ -98,7 +98,8 @@
                 android:background="@color/white"
                 android:gravity="center_vertical|end"
                 android:text="Host Name"
-                app:layout_constraintBaseline_toBaselineOf="@id/tv_1"
+                android:inputType="text"
+                app:layout_constraintBaseline_toBaselineOf="@id/main_tv_hint"
                 app:layout_constraintRight_toRightOf="parent"
                 />
 
@@ -110,7 +111,7 @@
                 android:gravity="center"
                 android:text="IP"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_1" />
+                app:layout_constraintTop_toBottomOf="@id/main_tv_hint" />
 
             <EditText
                 android:id="@+id/dlli_et_location_ip"
@@ -118,6 +119,7 @@
                 android:layout_height="50dp"
                 android:background="@color/white"
                 android:gravity="center_vertical|end"
+                android:inputType="text"
                 android:text="192.168.43.131"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintBaseline_toBaselineOf="@id/tv_2"
@@ -139,6 +141,7 @@
                 android:layout_height="50dp"
                 android:background="@color/white"
                 android:gravity="center_vertical|end"
+                android:inputType="number"
                 android:text="8080"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintBaseline_toBaselineOf="@id/tv_3"

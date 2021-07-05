@@ -15,8 +15,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.oobiliuoo.intelligentgarageapp.R;
+import com.oobiliuoo.intelligentgarageapp.bean.ControlCard;
 import com.oobiliuoo.intelligentgarageapp.bean.HostLocation;
 import com.oobiliuoo.intelligentgarageapp.utils.MyUtils;
+
+import org.litepal.LitePal;
 
 import java.util.List;
 
@@ -59,11 +62,9 @@ public class HostLocationListViewAdapter  extends ArrayAdapter<HostLocation> {
         }
 
         viewHolder.tvLocation.setText(hostLocation.getLocationName());
-
         viewHolder.btnCancel.setVisibility(View.GONE);
         viewHolder.btnSave.setVisibility(View.GONE);
         viewHolder.llInfo.setVisibility(View.GONE);
-
         viewHolder.etLocation.setText(hostLocation.getLocationName());
         viewHolder.etLocation.setEnabled(false);
         viewHolder.etIp.setText(hostLocation.getIpAddress());
@@ -74,25 +75,31 @@ public class HostLocationListViewAdapter  extends ArrayAdapter<HostLocation> {
         viewHolder.llTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 初始化状态
                 viewHolder.etLocation.setEnabled(false);
                 viewHolder.etIp.setEnabled(false);
                 viewHolder.etPort.setEnabled(false);
+                viewHolder.btnCancel.setVisibility(View.GONE);
+                viewHolder.btnSave.setVisibility(View.GONE);
+                viewHolder.etLocation.setText(hostLocation.getLocationName());
+                viewHolder.etIp.setText(hostLocation.getIpAddress());
+                viewHolder.etPort.setText(hostLocation.getPort());
 
-                // 列表被展开
+                // 列表收缩
                 if(viewHolder.isTitleClick){
-                    MyUtils.mLog1("test","title:" + viewHolder.isTitleClick);
                     viewHolder.llInfo.setVisibility(View.GONE);
                     viewHolder.ibtnEdit.setVisibility(View.GONE);
                     viewHolder.ibtnSelect.setVisibility(View.VISIBLE);
                     viewHolder.isTitleClick = false;
                 }else{
-                    MyUtils.mLog1("test","title:" + viewHolder.isTitleClick);
+                    //列表被打开
                     viewHolder.llInfo.setVisibility(View.VISIBLE);
+                    // 处于正常模式
                     if(!viewHolder.isDelete){
-                        MyUtils.mLog1("test","isdelete:" + viewHolder.isTitleClick);
                         viewHolder.ibtnSelect.setVisibility(View.GONE);
                         viewHolder.ibtnEdit.setVisibility(View.VISIBLE);
                     }else {
+                        //处于删除模式
                         viewHolder.ibtnEdit.setVisibility(View.GONE);
                     }
                     viewHolder.isTitleClick = true;
@@ -106,10 +113,10 @@ public class HostLocationListViewAdapter  extends ArrayAdapter<HostLocation> {
         viewHolder.llTitle.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                // 长按进入删除模式
                 viewHolder.ibtnEdit.setVisibility(View.GONE);
                 viewHolder.ibtnRemove.setVisibility(View.VISIBLE);
                 viewHolder.isDelete = true;
-                MyUtils.mLog1("HLVA: long touch title");
                 return false;
             }
 
@@ -121,25 +128,73 @@ public class HostLocationListViewAdapter  extends ArrayAdapter<HostLocation> {
                 if(viewHolder.isDelete){
                    viewHolder.ibtnRemove.setVisibility(View.GONE);
                    viewHolder.isDelete = false;
+                   viewHolder.ibtnEdit.setVisibility(View.VISIBLE);
+                   viewHolder.ibtnSelect.setVisibility(View.GONE);
                 }else {
-                    listener.HostListOnClick(v);
+                    listener.HostListOnClick(v,hostLocation);
                 }
-            }
-        });
-
-        viewHolder.etLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewHolder.etLocation.setEnabled(true);
             }
         });
 
         viewHolder.ibtnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 进入编辑模式
                 viewHolder.etLocation.setEnabled(true);
                 viewHolder.etIp.setEnabled(true);
                 viewHolder.etPort.setEnabled(true);
+                v.setVisibility(View.GONE);
+                viewHolder.btnSave.setVisibility(View.VISIBLE);
+                viewHolder.btnCancel.setVisibility(View.VISIBLE);
+            }
+        });
+
+
+        viewHolder.btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 取消保存
+                v.setVisibility(View.GONE);
+                viewHolder.btnSave.setVisibility(View.GONE);
+                viewHolder.ibtnEdit.setVisibility(View.VISIBLE);
+
+                viewHolder.etLocation.setText(hostLocation.getLocationName());
+                viewHolder.etIp.setText(hostLocation.getIpAddress());
+                viewHolder.etPort.setText(hostLocation.getPort());
+
+                viewHolder.etLocation.setEnabled(false);
+                viewHolder.etIp.setEnabled(false);
+                viewHolder.etPort.setEnabled(false);
+
+            }
+        });
+
+        viewHolder.btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hostLocation.setLocationName(viewHolder.etLocation.getText().toString());
+                hostLocation.setIpAddress(viewHolder.etIp.getText().toString());
+                hostLocation.setPort(viewHolder.etPort.getText().toString());
+                hostLocation.save();
+                viewHolder.btnSave.setVisibility(View.GONE);
+                viewHolder.btnCancel.setVisibility(View.GONE);
+                viewHolder.ibtnEdit.setVisibility(View.VISIBLE);
+                viewHolder.etLocation.setEnabled(false);
+                viewHolder.etIp.setEnabled(false);
+                viewHolder.etPort.setEnabled(false);
+                viewHolder.tvLocation.setText(hostLocation.getLocationName());
+
+            }
+        });
+
+        viewHolder.ibtnRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(hostLocation.isSaved()){
+                    hostLocation.delete();
+                }
+                viewHolder.llTitle.setVisibility(View.GONE);
+                viewHolder.llInfo.setVisibility(View.GONE);
             }
         });
 
@@ -150,6 +205,8 @@ public class HostLocationListViewAdapter  extends ArrayAdapter<HostLocation> {
     class ViewHolder{
         boolean isTitleClick = false;
         boolean isDelete = false;
+
+
         TextView tvLocation ;
         Button btnCancel;
         Button btnSave;
@@ -162,11 +219,12 @@ public class HostLocationListViewAdapter  extends ArrayAdapter<HostLocation> {
         ImageButton ibtnRemove;
         ImageButton ibtnEdit;
 
+
     }
 
     /**通过接口回调，使得在活动中控制监听事件*/
     public interface HostListViewOnClickListener{
-        public void HostListOnClick(View v);
+        public void HostListOnClick(View v,HostLocation h);
         public void HostListOnLongClick(View v);
 
     }
