@@ -23,10 +23,10 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         int broadcastMsg = intent.getIntExtra(MyUtils.BROADCAST_MSG,-1);
         switch (broadcastMsg){
             case MyUtils.CONNECT_SUCCESS:
-                MyUtils.sendMessage(handler,MyUtils.CONNECT_SUCCESS,null);
+                MyUtils.sendMessage(handler,MyUtils.CONNECT_SUCCESS,1);
                 break;
             case MyUtils.CONNECT_FAIL:
-                MyUtils.sendMessage(handler,MyUtils.CONNECT_FAIL,null);
+                MyUtils.sendMessage(handler,MyUtils.CONNECT_FAIL,1);
                 break;
             case MyUtils.RECEIVE_DATA:
                 MyUtils.sendMessage(handler,MyUtils.RECEIVE_DATA,intent.getStringExtra(MyUtils.RECEIVE));

@@ -4,6 +4,7 @@ package com.oobiliuoo.intelligentgarageapp.bean;
 import com.oobiliuoo.intelligentgarageapp.utils.MyUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -33,6 +34,8 @@ public class MyMessage {
      * */
     public static final String[] MESSAGE_MODE = {"DATA","NOTIFY","ACTION"};
 
+    public static HashMap<String,String> NOTIFY_MODE_MAP = new HashMap<>();
+
     private String message;
     private String ip;
     private int mode;
@@ -43,6 +46,10 @@ public class MyMessage {
         mode = 0;
         context = "";
         message = ip + DIVISION + MESSAGE_MODE[mode] + DIVISION + context;
+
+        NOTIFY_MODE_MAP.put("CAR-IN","有车辆入库");
+        NOTIFY_MODE_MAP.put("CAR-OUT","有车辆出库");
+        NOTIFY_MODE_MAP.put("WARING","警告：大门剧烈震动");
     }
 
     public MyMessage(String message) {
@@ -56,6 +63,12 @@ public class MyMessage {
             }
         }
         this.context = msg[2];
+
+
+        NOTIFY_MODE_MAP.put("CAR-IN","有车辆入库");
+        NOTIFY_MODE_MAP.put("CAR-OUT","有车辆出库");
+        NOTIFY_MODE_MAP.put("WARING","警告：大门剧烈震动");
+
     }
 
     public String getMessage() {
@@ -100,6 +113,7 @@ public class MyMessage {
     }
 
     /**
+     *  context 格式 ： NAME-STATES::NAME2-STATES2::
      *  ex: context = "LED0-ON::LED1-OFF::DOOR-ON"
      *  第一步：data1 = {"LED0-ON", "LED1-OFF", "DOOR-ON"}
      *  第二步：temp1 = "LED0-ON"
@@ -117,6 +131,24 @@ public class MyMessage {
         }
         return list;
     }
+
+
+
+    /**
+     *  context 格式 : MODE::TIME::DATA
+     *  ex: context = "NORMAL::2021-7-9-15-32::there have a car XXX into the garage"
+     *  第一步：data1 = {"NORMAL", "2021-7-9-15-32", "XXXX}
+     * */
+    public String[] getNotifyContext(){
+        String[] data = {};
+        if(this.mode == 1){
+            data = this.context.split(DIVISION);
+        }else {
+            MyUtils.mLog1("MyMessage: getNotifyContext fail. require mode 1 but mode is " + this.mode);
+        }
+        return data;
+    }
+
 
     public void setContext(String context) {
         this.context = context;

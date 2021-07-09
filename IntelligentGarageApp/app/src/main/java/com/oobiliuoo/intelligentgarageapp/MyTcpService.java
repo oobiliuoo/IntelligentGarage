@@ -3,6 +3,7 @@ package com.oobiliuoo.intelligentgarageapp;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import androidx.core.app.NotificationCompat;
 
 import com.oobiliuoo.intelligentgarageapp.bean.MyMessage;
+import com.oobiliuoo.intelligentgarageapp.bean.NotifyInfo;
 import com.oobiliuoo.intelligentgarageapp.utils.MyUtils;
 
 import java.io.File;
@@ -60,15 +62,23 @@ public class MyTcpService extends Service {
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        MyUtils.mLog1(TGA, "onStartCommand");
+        MyUtils.mLog1(TGA, "server: onStartCommand");
 
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
-        MyUtils.mLog1(TGA, "onDestroy");
+        MyUtils.mLog1(TGA, "server: onDestroy");
         super.onDestroy();
+        if(mSocket!=null){
+            try {
+                mSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     public MyTcpService() {
@@ -238,9 +248,20 @@ public class MyTcpService extends Service {
 
 
     void sendNotify(MyMessage myMessage){
-        String text = myMessage.getContext();
+        String data[] = myMessage.getNotifyContext();
+        if(data.length!=3){
+            MyUtils.mLog1("server: the data length is: " + data.length);
+            return;
+        }
+        String ip = myMessage.getIp();
+        String title = MyMessage.NOTIFY_MODE_MAP.get(data[0]);
+        String time = data[1];
+        String text = data[2];
+
         String id = "my_channel_01";
         String name="我是渠道名字";
+        Intent intent = new Intent(getApplicationContext(),NotifyActivity.class);
+        PendingIntent pi = PendingIntent.getActivity(getApplicationContext(),0,intent,0);
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Notification notification = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -248,14 +269,16 @@ public class MyTcpService extends Service {
             notificationManager.createNotificationChannel(mChannel);
             notification = new Notification.Builder(this)
                     .setChannelId(id)
-                    .setContentTitle("有车辆入库")
+                    .setContentTitle(title)
                     .setContentText(text)
                     .setWhen(System.currentTimeMillis())
                     .setSmallIcon(R.drawable.logo_16)
+                    .setContentIntent(pi)
+                    .setAutoCancel(true)
                     .build();
         } else {
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext())
-                    .setContentTitle("5 new messages")
+                    .setContentTitle(title)
                     .setContentText(text)
                     .setSmallIcon(R.drawable.logo_16)
                     .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.logo_48))
@@ -264,6 +287,11 @@ public class MyTcpService extends Service {
             notification = notificationBuilder.build();
         }
         notificationManager.notify(111123, notification);
+
+
+        NotifyInfo notifyInfo = new NotifyInfo(time,data[0],text,ip);
+        notifyInfo.save();
+
 
     }
 

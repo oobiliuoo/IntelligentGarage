@@ -28,6 +28,7 @@ public class MainActivity extends BaseActivity {
     private GridView gridView;
     private List<ControlCard> controlCardList = new ArrayList<>();
     private ImageButton btnSet;
+    private ImageButton btnNotify;
     private ProgressBar pbBrightness;
     private TextView tvHostName;
     private ImageView ivHome;
@@ -88,6 +89,9 @@ public class MainActivity extends BaseActivity {
                 Intent intent = new Intent(MainActivity.this, SettingActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.main_btn_notify:
+                startActivity(new Intent(MainActivity.this,NotifyActivity.class));
+                break;
             default:
         }
     }
@@ -114,6 +118,10 @@ public class MainActivity extends BaseActivity {
 
         btnSet = (ImageButton) findViewById(R.id.main_btn_set);
         btnSet.setOnClickListener(new MyLister());
+
+        btnNotify = (ImageButton) findViewById(R.id.main_btn_notify);
+        btnNotify.setOnClickListener(new MyLister());
+
         gridView = findViewById(R.id.main_gridview);
 
         pbBrightness = (ProgressBar) findViewById(R.id.main_pb_brightness);

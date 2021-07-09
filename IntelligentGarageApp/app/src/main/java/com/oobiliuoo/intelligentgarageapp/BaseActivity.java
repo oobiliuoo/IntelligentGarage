@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -70,14 +71,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * 用于消息传递，进行UI更新
      */
-    public Handler handler = new Handler() {
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
-            initHandleMessage(msg);
-
-        }
-    };
+    public Handler handler;
 
     /**
      * 消息处理事件
@@ -98,6 +92,16 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         initData();
         checkPermission();
+
+        handler = new Handler() {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                initHandleMessage(msg);
+
+            }
+        };
+
         initServer();
         LitePal.initialize(this);
         init();
@@ -139,6 +143,14 @@ public abstract class BaseActivity extends AppCompatActivity {
         stopService(bindIntent);
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            moveTaskToBack(false);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     /**
      * 绑定服务
@@ -216,6 +228,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * card: 哪个控制卡片
      * */
     protected abstract boolean checkChanged(ControlCard card, boolean isChecked);
+
 
 
 

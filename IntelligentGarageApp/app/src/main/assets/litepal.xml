@@ -4,7 +4,7 @@
     <!-- 数据库名 -->
     <dbname value="IntelligentGarage"/>
     <!-- 版本号 -->
-    <version value="4"/>
+    <version value="5"/>
     <list>
         <!-- 创建表 -->
         <mapping class="com.oobiliuoo.intelligentgarageapp.bean.ControlCard"/>

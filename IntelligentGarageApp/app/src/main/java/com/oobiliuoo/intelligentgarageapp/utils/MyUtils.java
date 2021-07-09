@@ -94,6 +94,7 @@ public class MyUtils {
      * */
     public static void sendMessage(Handler handler, int what, Object obj){
         Message message = Message.obtain();
+        //Message message = new Message();
         message.what = what;
         message.obj = obj;
         handler.sendMessage(message);

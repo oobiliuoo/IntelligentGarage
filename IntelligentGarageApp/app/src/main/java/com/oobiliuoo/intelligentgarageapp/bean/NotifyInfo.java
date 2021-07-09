@@ -8,8 +8,16 @@ public class NotifyInfo extends LitePalSupport {
     private String text;
     @Column(nullable = false)
     private String ipAddress;
+    private String mode;
 
     public NotifyInfo() {
+    }
+
+    public NotifyInfo(String time, String mode,String text, String ipAddress) {
+        this.time = time;
+        this.mode = mode;
+        this.text = text;
+        this.ipAddress = ipAddress;
     }
 
     public String getTime() {
@@ -34,5 +42,13 @@ public class NotifyInfo extends LitePalSupport {
 
     public void setIpAddress(String ipAddress) {
         this.ipAddress = ipAddress;
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
     }
 }
