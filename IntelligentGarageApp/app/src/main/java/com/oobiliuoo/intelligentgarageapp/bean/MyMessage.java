@@ -155,12 +155,12 @@ public class MyMessage {
     }
 
     public void setContext(ControlCard card) {
-        this.context += card.getName() + DIVISION + card.getState() + DIVISION;
+        this.context += card.getName() + DIVISION2 + card.getState() + DIVISION;
     }
 
     public void setContext(List<ControlCard> list){
         for(ControlCard card : list){
-            this.context += card.getName() + DIVISION + card.getState() + DIVISION;
+            this.context += card.getName() + DIVISION2 + card.getState() + DIVISION;
         }
     }
 

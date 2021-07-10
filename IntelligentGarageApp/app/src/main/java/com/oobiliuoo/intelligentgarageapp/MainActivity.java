@@ -2,6 +2,7 @@ package com.oobiliuoo.intelligentgarageapp;
 
 import android.content.Intent;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -104,7 +105,7 @@ public class MainActivity extends BaseActivity {
             card.setState("OFF");
         }
         MyMessage message = new MyMessage();
-        message.setDataMode();
+        message.setActionMode();
         message.setContext(card);
         MyUtils.mLog1("MA: checkChanged  " + message.getMessage());
 
@@ -223,6 +224,15 @@ public class MainActivity extends BaseActivity {
         super.onDestroy();
         unbindService(connection);
         MyUtils.mLog1("MainActivity onDestroy");
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            moveTaskToBack(false);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 }

@@ -159,6 +159,8 @@ public class MyTcpService extends Service {
                 intent.putExtra(MyUtils.BROADCAST_MSG,MyUtils.CONNECT_SUCCESS);
                 sendBroadcast(intent);
                 receive();
+                send2();
+
             } else {
                 mSocket.close();
             }
@@ -226,6 +228,29 @@ public class MyTcpService extends Service {
                 } else {
                     MyUtils.mLog1( "server: 服务处于断开状态，请检查网络");
                     return;
+                }
+            }
+        }).start();
+    }
+
+    private void send2(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (mSocket != null && mSocket.isConnected() ) {
+
+                    try {   //发送
+                        MyMessage m = new MyMessage();
+                        m.setIp(ip);
+                        m.setMode(2);
+                        m.setContext("REQUEST");
+                        mOutStream.write(m.getMessage().getBytes());
+                        mOutStream.flush();
+                        Thread.sleep(1000);
+                        MyUtils.mLog1("server: send success. the msg: " + sendMsg);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }).start();
